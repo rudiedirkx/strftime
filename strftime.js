@@ -1,62 +1,85 @@
 
-(function(c) {
+(function(C) {
 
 	var lpad = function(n) {
-		return 10 > n ? '0'+n : ''+n
-	}
+		return 10 > n ? '0'+n : ''+n;
+	};
+
+	var weekdays = {
+		en: ['Sunday', 'Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday'],
+		nl: ['zondag', 'maandag', 'dinsdag', 'woensdag', 'donderdag', 'vrijdag', 'zaterdag']
+	};
+
+	var months = {
+		en: ['January', 'February', 'March', 'April', 'May', 'June', 'July', 'August', 'September', 'October', 'November', 'December'],
+		nl: ['januari', 'februari', 'maart', 'april', 'mei', 'juni', 'juli', 'augustus', 'september', 'oktober', 'november', 'december']
+	};
 
 	var formats = {
+		a: function(d, l) {
+			Date.weekdays[l] || (l = 'en');
+			return Date.weekdays[l][d.getDay()].substr(0, 3);
+		},
+		A: function(d, l) {
+			Date.weekdays[l] || (l = 'en');
+			return Date.weekdays[l][d.getDay()];
+		},
+		b: function(d, l) {
+			Date.months[l] || (l = 'en');
+			return Date.months[l][d.getMonth()].substr(0, 3);
+		},
+		B: function(d, l) {
+			Date.months[l] || (l = 'en');
+			return Date.months[l][d.getMonth()];
+		},
 		Y: function(d) {
-			return ''+d.getFullYear()
+			return d.getFullYear();
 		},
 		m: function(d) {
-			var m = d.getMonth()+1
-			return lpad(m)
+			return lpad(d.getMonth()+1);
 		},
 		d: function(d) {
-			var d = d.getDate()
-			return lpad(d)
+			return lpad(d.getDate());
 		},
 		y: function(d) {
-			return (''+d.getFullYear()).substr(2)
+			return String(d.getFullYear()).substr(2);
 		},
 		D: function(d) {
-			return d.strftime('%m/%d/%y')
+			return d.strftime('%m/%d/%y');
 		},
 		F: function(d) {
-			return d.strftime('%Y-%m-%d')
+			return d.strftime('%Y-%m-%d');
 		},
 		s: function(d) {
-			return ''+parseInt(d.getTime()/1000)
+			return parseInt(d.getTime()/1000);
 		},
 		H: function(d) {
-			var h = d.getHours()
-			return lpad(h)
+			return lpad(d.getHours());
 		},
 		M: function(d) {
-			var m = d.getMinutes()
-			return lpad(m)
+			return lpad(d.getMinutes());
 		},
 		S: function(d) {
-			var s = d.getSeconds()
-			return lpad(s)
+			return lpad(d.getSeconds());
 		},
 		T: function(d) {
-			return d.strftime('%H:%M:%S')
+			return d.strftime('%H:%M:%S');
 		},
 		w: function(d) {
-			return ''+d.getDay()
+			return d.getDay();
 		}
-	}
+	};
 
 	// publish
-	c.prototype.strftime = function(f) {
-		var d = this
+	C.prototype.strftime = function(f, l) {
+		var d = this;
 		return f.replace(/%([a-zA-Z%])/g, function(t, m) {
-			return formats[m] ? formats[m](d) : ( m == '%' ? '' : '%' ) + m
-		})
-	}
+			return formats[m] ? formats[m](d, l) : ( m == '%' ? '' : '%' ) + m;
+		});
+	};
 
-	c.formats = formats
+	C.formats = formats;
+	C.weekdays = weekdays;
+	C.months = months;
 
 })(Date);
